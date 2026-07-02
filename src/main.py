@@ -495,7 +495,7 @@ def _card_html(card: RenderedCard) -> str:
   {_badge_html(card.rank)}
   <div class="body">
     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap: 12px;">
-      <div>
+      <div style="flex: 1; min-width: 0;">
         <div class="name">{name}</div>
         <div class="pills">{cuisines}</div>
       </div>
