@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zomato AI Recommendations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#424750",
+                      "on-primary": "#680011",
+                      "surface-container": "#1e2020",
+                      "tertiary-fixed": "#dee2ee",
+                      "surface-tint": "#ffb3b1",
+                      "tertiary-container": "#8c919c",
+                      "tertiary": "#c2c6d2",
+                      "on-primary-fixed-variant": "#92001c",
+                      "on-primary-container": "#5b000e",
+                      "surface-dim": "#121414",
+                      "surface": "#121414",
+                      "primary-fixed": "#ffdad8",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-highest": "#343535",
+                      "background": "#121414",
+                      "primary-fixed-dim": "#ffb3b1",
+                      "inverse-surface": "#e3e2e2",
+                      "primary-container": "#ff535a",
+                      "surface-variant": "#343535",
+                      "on-primary-fixed": "#410007",
+                      "surface-bright": "#38393a",
+                      "on-surface-variant": "#e4bebc",
+                      "on-secondary": "#2d3138",
+                      "secondary-container": "#43474f",
+                      "inverse-primary": "#bb162c",
+                      "on-secondary-container": "#b2b5be",
+                      "on-tertiary-fixed": "#171c24",
+                      "primary": "#ffb3b1",
+                      "surface-container-high": "#292a2a",
+                      "outline": "#ab8987",
+                      "inverse-on-surface": "#2f3131",
+                      "on-background": "#e3e2e2",
+                      "surface-container-low": "#1a1c1c",
+                      "error": "#ffb4ab",
+                      "error-container": "#93000a",
+                      "tertiary-fixed-dim": "#c2c6d2",
+                      "on-secondary-fixed": "#181c23",
+                      "secondary-fixed-dim": "#c3c6d0",
+                      "surface-container-lowest": "#0d0e0f",
+                      "on-tertiary": "#2c313a",
+                      "on-tertiary-container": "#252a33",
+                      "secondary": "#c3c6d0",
+                      "on-surface": "#e3e2e2",
+                      "on-error": "#690005",
+                      "secondary-fixed": "#dfe2ec",
+                      "outline-variant": "#5b403f",
+                      "on-secondary-fixed-variant": "#43474f"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "4px",
+                      "container-max": "1280px",
+                      "sm": "16px",
+                      "xs": "8px",
+                      "md": "24px",
+                      "xl": "48px",
+                      "lg": "32px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "display": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "label-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0F1115;
+            color: #e3e2e2;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-header {
+            backdrop-filter: blur(20px);
+            background: rgba(18, 20, 20, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .ai-gradient-card {
+            background: linear-gradient(135deg, rgba(226, 55, 68, 0.15) 0%, rgba(37, 42, 51, 1) 100%);
+            border: 1px solid rgba(226, 55, 68, 0.3);
+            box-shadow: 0 0 20px rgba(226, 55, 68, 0.1);
+        }
+        .primary-btn-glow:hover {
+            box-shadow: 0 0 25px rgba(226, 55, 68, 0.4);
+            transform: scale(1.01);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 179, 177, 0.4);
+            box-shadow: 0 12px 24px -10px rgba(0,0,0,0.5);
+        }
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, #1e2020 25%, #292a2a 50%, #1e2020 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        input, select, textarea {
+            background: #121414 !important;
+            border-color: #2A2F38 !important;
+            color: #e3e2e2 !important;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #ffb3b1 !important;
+            ring-color: #ffb3b1 !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 w-full z-50 glass-header">
+<nav class="max-w-[1200px] mx-auto px-md py-sm flex justify-between items-center h-20">
+<div class="flex items-center gap-sm">
+<img alt="Zomato AI Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida/AP1WRLsJXzNOPhsG9Bi_IwDHVQRl19DMmcGe0fdMDruCQcT583BGDM68L0UTyyi7inAaJeU8BB22vcJ-pgfJSMmXK2yVapFFgcdwdx10wX0uYmboWRK8KYb1MOyLRRLog9Vdh6xIDkzY1fotDxUYNUJjvV9LfP5vn3OdszAelLZ3YTsqwYhighxjHVnJolFclPki81BahQhqb0aGwHimb8EFXbSGPyvAFF0vMVBvaKchLzv_ZXgzoU2Ae2VSb28N"/>
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Zomato AI Recommendations</span>
+</div>
+<div class="hidden md:flex items-center gap-lg">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md" href="#">Find your perfect restaurant</a>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+</div>
+</nav>
+</header>
+<main class="pt-32 pb-xl px-md max-w-[1200px] mx-auto">
+<!-- Alerts Section -->
+<div class="mb-lg space-y-sm">
+<!-- Server Error Alert -->
+<div class="bg-error-container text-on-error-container px-md py-sm rounded-xl flex items-center gap-sm border border-error/20">
+<span class="material-symbols-outlined">report</span>
+<p class="font-body-md text-body-md">Server Error: Some high-fidelity neural filters are temporarily unavailable. Results may vary.</p>
+</div>
+<!-- Relaxed Filters Banner -->
+<div class="bg-amber-900/30 text-amber-200 px-md py-sm rounded-xl flex items-center gap-sm border border-amber-500/20">
+<span class="material-symbols-outlined">info</span>
+<p class="font-body-md text-body-md">We've relaxed your 'Budget' and 'Distance' filters slightly to show more relevant matches.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-[40%_60%] gap-xl">
+<!-- Left Column: Preferences -->
+<aside class="space-y-lg">
+<div class="bg-[#1D2128] p-lg rounded-xl border border-[#2A2F38] sticky top-32">
+<h2 class="font-headline-md text-headline-md mb-lg flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">tune</span>
+                        Your Preferences
+                    </h2>
+<form class="space-y-md" onsubmit="event.preventDefault();">
+<!-- Location Field -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant block">Location</label>
+<div class="relative">
+<input class="w-full rounded-lg px-md py-sm focus:ring-1 outline-none transition-all" placeholder="e.g. Indiranagar, Bangalore" type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant">location_on</span>
+</div>
+<p class="text-error font-label-sm text-label-sm mt-xs">Please specify a more precise locality.</p>
+<div class="flex flex-wrap gap-xs mt-xs">
+<button class="px-xs py-[2px] bg-surface-container-highest rounded-full text-label-sm font-label-sm hover:bg-primary/20 transition-colors border border-outline-variant/30">Indiranagar 12th Main</button>
+<button class="px-xs py-[2px] bg-surface-container-highest rounded-full text-label-sm font-label-sm hover:bg-primary/20 transition-colors border border-outline-variant/30">Koramangala 4th Block</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<!-- Budget Dropdown -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant block">Budget</label>
+<select class="w-full rounded-lg px-md py-sm focus:ring-1 outline-none transition-all appearance-none cursor-pointer">
+<option>Any</option>
+<option>Low &lt;₹500</option>
+<option selected="">Medium ₹501-1500</option>
+<option>High &gt;₹1500</option>
+</select>
+</div>
+<!-- Cuisine Dropdown -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant block">Cuisine</label>
+<select class="w-full rounded-lg px-md py-sm focus:ring-1 outline-none transition-all appearance-none cursor-pointer">
+<option>All Cuisines</option>
+<option>Italian</option>
+<option>Japanese</option>
+<option>North Indian</option>
+<option>South Indian</option>
+</select>
+</div>
+</div>
+<!-- Rating Slider -->
+<div class="space-y-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface-variant">Min. Rating</label>
+<span class="text-primary font-bold font-label-md text-label-md">4.2+ ★</span>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" max="5" min="0" step="0.1" type="range" value="4.2"/>
+</div>
+<!-- Cravings Textarea -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant block">Describe your cravings</label>
+<textarea class="w-full rounded-lg px-md py-sm focus:ring-1 outline-none transition-all resize-none" placeholder="I'm looking for a quiet place with great sourdough pizza and candlelight..." rows="3"></textarea>
+</div>
+<button class="w-full py-md bg-[#E23744] text-white font-headline-md text-headline-md rounded-xl primary-btn-glow transition-all duration-300 flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                            Get Recommendations
+                        </button>
+</form>
+</div>
+</aside>
+<!-- Right Column: Recommendations -->
+<section class="space-y-lg">
+<!-- Filter Chips -->
+<div class="flex items-center gap-sm overflow-x-auto pb-xs">
+<span class="material-symbols-outlined text-on-surface-variant">filter_list</span>
+<button class="px-md py-xs bg-primary text-on-primary-container rounded-full font-label-md text-label-md whitespace-nowrap">AI Top Picks</button>
+<button class="px-md py-xs bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md whitespace-nowrap border border-outline-variant/30 hover:border-primary transition-all">Trending</button>
+<button class="px-md py-xs bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md whitespace-nowrap border border-outline-variant/30 hover:border-primary transition-all">Quick Bites</button>
+<button class="px-md py-xs bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md whitespace-nowrap border border-outline-variant/30 hover:border-primary transition-all">Near You</button>
+</div>
+<!-- AI Summary Card -->
+<div class="ai-gradient-card p-lg rounded-xl relative overflow-hidden">
+<div class="flex items-start gap-md relative z-10">
+<span class="material-symbols-outlined text-primary text-headline-lg mt-1" style="font-variation-settings: 'FILL' 1;">spark</span>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Neural Insight</h3>
+<p class="font-body-lg text-body-lg text-on-surface italic opacity-90">
+                                "Based on your preferences, these restaurants balance quality, value, ambience and customer ratings."
+                            </p>
+</div>
+</div>
+<!-- Background light effect -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/10 blur-[60px] rounded-full"></div>
+</div>
+<!-- Recommendation List -->
+<div class="space-y-md">
+<!-- Card 1 -->
+<div class="bg-[#181B20] p-md rounded-xl border border-[#2A2F38] card-hover transition-all duration-300 flex gap-md">
+<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 font-bold text-headline-md">
+                            #1
+                        </div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-xs">
+<div>
+<h4 class="font-headline-md text-headline-md">The Gourmet Sourdough</h4>
+<div class="flex gap-xs mt-xs">
+<span class="px-xs py-[2px] bg-surface-container-low border border-outline-variant/20 rounded text-label-sm font-label-sm">Italian</span>
+<span class="px-xs py-[2px] bg-surface-container-low border border-outline-variant/20 rounded text-label-sm font-label-sm">Artisan Pizza</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center justify-end text-yellow-400 gap-xs">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 18px;">star</span>
+<span class="font-bold text-headline-md">4.9</span>
+</div>
+<span class="text-on-surface-variant font-label-sm text-label-sm">₹1,800 for two</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-md bg-surface-container-lowest/50 p-sm rounded-lg border-l-4 border-primary/40">
+<span class="font-bold text-primary mr-xs italic">AI Review:</span>
+                                Perfect match for your sourdough craving. Their 'Candlelight Evenings' provide the quiet, premium atmosphere you requested. Try the Truffle Burrata Pizza.
+                            </p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-[#181B20] p-md rounded-xl border border-[#2A2F38] card-hover transition-all duration-300 flex gap-md">
+<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-lg bg-slate-400/10 border border-slate-400/30 text-slate-400 font-bold text-headline-md">
+                            #2
+                        </div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-xs">
+<div>
+<h4 class="font-headline-md text-headline-md">Nonna's Kitchen</h4>
+<div class="flex gap-xs mt-xs">
+<span class="px-xs py-[2px] bg-surface-container-low border border-outline-variant/20 rounded text-label-sm font-label-sm">Italian</span>
+<span class="px-xs py-[2px] bg-surface-container-low border border-outline-variant/20 rounded text-label-sm font-label-sm">Family-run</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center justify-end text-yellow-400 gap-xs">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 18px;">star</span>
+<span class="font-bold text-headline-md">4.7</span>
+</div>
+<span class="text-on-surface-variant font-label-sm text-label-sm">₹1,200 for two</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-md bg-surface-container-lowest/50 p-sm rounded-lg border-l-4 border-slate-400/40">
+<span class="font-bold text-slate-400 mr-xs italic">AI Review:</span>
+                                A charming, rustic spot with high-quality ingredients. While slightly more vibrant than 'quiet', the food quality is unmatched for the price point.
+                            </p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-[#181B20] p-md rounded-xl border border-[#2A2F38] card-hover transition-all duration-300 flex gap-md">
+<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-lg bg-amber-700/10 border border-amber-700/30 text-amber-700 font-bold text-headline-md">
+                            #3
+                        </div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-xs">
+<div>
+<h4 class="font-headline-md text-headline-md">Oven &amp; Oak</h4>
+<div class="flex gap-xs mt-xs">
+<span class="px-xs py-[2px] bg-surface-container-low border border-outline-variant/20 rounded text-label-sm font-label-sm">Woodfire</span>
+<span class="px-xs py-[2px] bg-surface-container-low border border-outline-variant/20 rounded text-label-sm font-label-sm">Modern</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center justify-end text-yellow-400 gap-xs">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 18px;">star</span>
+<span class="font-bold text-headline-md">4.5</span>
+</div>
+<span class="text-on-surface-variant font-label-sm text-label-sm">₹1,500 for two</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-md bg-surface-container-lowest/50 p-sm rounded-lg border-l-4 border-amber-700/40">
+<span class="font-bold text-amber-700 mr-xs italic">AI Review:</span>
+                                Excellent wood-fired crust. The seating is spaced well for privacy. Hits your preference for sourdough but is currently at 80% capacity.
+                            </p>
+</div>
+</div>
+<!-- Card 4 & 5 simplified for list effect -->
+<div class="bg-[#181B20] p-md rounded-xl border border-[#2A2F38] card-hover transition-all duration-300 flex gap-md">
+<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-lg bg-surface-container-highest border border-outline-variant/30 text-on-surface-variant font-bold text-headline-md">
+                            #4
+                        </div>
+<div class="flex-grow">
+<div class="flex justify-between items-center">
+<h4 class="font-headline-md text-headline-md">Luigi's Bistro</h4>
+<span class="font-bold text-on-surface-variant">4.3 ★</span>
+</div>
+<p class="text-on-surface-variant font-body-md text-body-md mt-xs opacity-70">Solid choice for standard crust, slightly busier than requested.</p>
+</div>
+</div>
+<div class="bg-[#181B20] p-md rounded-xl border border-[#2A2F38] card-hover transition-all duration-300 flex gap-md">
+<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-lg bg-surface-container-highest border border-outline-variant/30 text-on-surface-variant font-bold text-headline-md">
+                            #5
+                        </div>
+<div class="flex-grow">
+<div class="flex justify-between items-center">
+<h4 class="font-headline-md text-headline-md">Dough &amp; Co.</h4>
+<span class="font-bold text-on-surface-variant">4.2 ★</span>
+</div>
+<p class="text-on-surface-variant font-body-md text-body-md mt-xs opacity-70">Budget friendly sourdough option with high value for money.</p>
+</div>
+</div>
+<!-- Skeleton Loading State -->
+<div class="bg-[#181B20]/40 p-md rounded-xl border border-dashed border-[#2A2F38] flex items-center gap-md opacity-60">
+<div class="w-12 h-12 flex-shrink-0 skeleton-shimmer rounded-lg"></div>
+<div class="flex-grow space-y-xs">
+<div class="h-6 w-1/3 skeleton-shimmer rounded"></div>
+<div class="h-4 w-2/3 skeleton-shimmer rounded"></div>
+</div>
+<div class="text-primary font-label-md text-label-md animate-pulse">AI is ranking restaurants for you...</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full flex flex-col items-center justify-center py-xl border-t border-outline-variant/10">
+<div class="max-w-[1200px] w-full px-md flex flex-col items-center gap-md">
+<div class="flex items-center gap-xs opacity-60">
+<img alt="Logo" class="h-6 w-6 grayscale contrast-125" src="https://lh3.googleusercontent.com/aida/AP1WRLsJXzNOPhsG9Bi_IwDHVQRl19DMmcGe0fdMDruCQcT583BGDM68L0UTyyi7inAaJeU8BB22vcJ-pgfJSMmXK2yVapFFgcdwdx10wX0uYmboWRK8KYb1MOyLRRLog9Vdh6xIDkzY1fotDxUYNUJjvV9LfP5vn3OdszAelLZ3YTsqwYhighxjHVnJolFclPki81BahQhqb0aGwHimb8EFXbSGPyvAFF0vMVBvaKchLzv_ZXgzoU2Ae2VSb28N"/>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Zomato AI Recommendations</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-center opacity-60">
+                © 2024 Zomato AI Recommendations. Powered by advanced semantic search and culinary neural networks.
+            </p>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md" href="#">Privacy</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md" href="#">Terms</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md" href="#">API Access</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interactions for rating slider label
+        const slider = document.querySelector('input[type="range"]');
+        const ratingLabel = document.querySelector('.text-primary.font-bold.font-label-md');
+        
+        slider.addEventListener('input', (e) => {
+            ratingLabel.textContent = `${e.target.value}+ ★`;
+        });
+
+        // Hover effect for cards to glow border dynamically (simplified vanilla JS)
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = 'rgba(226, 55, 68, 0.4)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = '#2A2F38';
+            });
+        });
+    </script>
+</body></html>
