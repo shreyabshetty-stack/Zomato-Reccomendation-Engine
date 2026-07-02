@@ -45,7 +45,7 @@ def get_locations():
 def get_cuisines():
     """Returns a sorted list of unique cuisines present in the catalog."""
     cuisines_set = set()
-    for r in _catalog.values():
+    for r in _catalog:
         for c in r.cuisines:
             cuisines_set.add(c)
     return sorted(list(cuisines_set))
