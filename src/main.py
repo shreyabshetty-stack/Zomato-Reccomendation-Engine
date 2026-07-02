@@ -406,10 +406,27 @@ _CARD_CSS = """
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
-body { background: transparent; }
+html, body {
+    background: transparent;
+    overflow-x: hidden;
+}
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #2A2F38;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #E23744;
+}
 .card {
     background: #181B20; border: 1px solid #2A2F38; border-radius: 16px;
-    padding: 24px; margin-bottom: 24px;
+    padding: 24px; margin: 8px 12px 20px 8px;
     display: flex; gap: 24px; align-items: flex-start;
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     transition: all 0.3s ease;
@@ -503,9 +520,9 @@ def _cards_component(cards: list[RenderedCard]) -> None:
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 {_CARD_CSS}
 </head><body>{inner}</body></html>"""
-    # Calculate height dynamically with generous bounds.
-    height_calc = 100 + len(cards) * 270
-    components.html(full_html, height=max(350, height_calc), scrolling=False)
+    # Calculate height dynamically with generous bounds, capped at 600px for container-scroll.
+    height_calc = 40 + len(cards) * 270
+    components.html(full_html, height=min(600, height_calc), scrolling=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
