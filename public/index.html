@@ -84,10 +84,10 @@
                 <span class="text-xl font-bold tracking-tight">Zomato AI Recommendations</span>
             </div>
             
-            <!-- API Connection Settings -->
+            <!-- API Connection Settings (Hidden in UI, configure via ?api= url parameter) -->
             <div class="flex items-center gap-3">
-                <div class="relative group">
-                    <button id="settings-btn" class="p-2 text-text-muted hover:text-text-main hover:bg-card-bg rounded-lg transition-colors flex items-center gap-1 text-sm border border-transparent hover:border-border-color">
+                <div class="relative group hidden">
+                    <button id="settings-btn" class="hidden p-2 text-text-muted hover:text-text-main hover:bg-card-bg rounded-lg transition-colors flex items-center gap-1 text-sm border border-transparent hover:border-border-color">
                         <span class="material-symbols-outlined" style="font-size: 20px;">settings</span>
                         <span>API Server</span>
                     </button>
@@ -279,6 +279,13 @@
         const relaxedWarning = document.getElementById('relaxed-warning');
         const relaxedWarningText = document.getElementById('relaxed-warning-text');
         const poweredByLabel = document.getElementById('powered-by-label');
+
+        // Parse ?api= query parameter from URL if present
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('api')) {
+            const apiParam = urlParams.get('api').replace(/\/$/, "");
+            localStorage.setItem('ZOMATO_API_URL', apiParam);
+        }
 
         // State variables
         let API_BASE_URL = localStorage.getItem('ZOMATO_API_URL') || '';
@@ -500,12 +507,8 @@
                 // Cuisines pills HTML
                 const cuisinePills = card.cuisines.split(',').slice(0, 3).map(c => {
                     const trimmed = c.trim();
-                    return trimmed ? `<span class="px-2.5 py-[2px] bg-bg-main border border-border-color rounded text-[10px] font-semibold text-text-main">${trimmed}</span>` : '';
+                    return trimmed ? `<span class="px-[12px] py-[4px] bg-[#1a1c1c] border border-border-color rounded-[4px] text-xs font-semibold text-text-main">${trimmed}</span>` : '';
                 }).join('');
-
-                // Online Order / Table Booking badges HTML
-                let onlineBadge = card.online_order.toLowerCase() === 'yes' ? `<span class="px-2 py-[2px] bg-blue-500/10 border border-blue-500/30 text-blue-500 rounded text-[10px] font-semibold">🛵 Online Order</span>` : '';
-                let tableBadge = card.book_table.toLowerCase() === 'yes' ? `<span class="px-2 py-[2px] bg-purple-500/10 border border-purple-500/30 text-purple-500 rounded text-[10px] font-semibold">🪑 Book Table</span>` : '';
 
                 cardEl.innerHTML = `
                     <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-lg font-bold ${badgeClass}">
@@ -528,7 +531,6 @@
                         <p class="text-sm text-text-muted mt-4 bg-[#0d0e0f]/50 p-4 rounded-xl border-l-4 ${explBorder} leading-relaxed">
                             <span class="font-bold italic ${explTitleColor} mr-1.5">AI Review:</span>${card.explanation}
                         </p>
-                        <div class="flex flex-wrap gap-2 mt-3">${onlineBadge}${tableBadge}</div>
                         ${card.votes ? `<div class="text-[10px] text-text-muted opacity-60 mt-3 flex items-center gap-1"><span class="material-symbols-outlined" style="font-size: 14px;">groups</span>${card.votes.toLocaleString()} votes</div>` : ''}
                     </div>
                 `;
